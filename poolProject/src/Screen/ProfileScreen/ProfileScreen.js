@@ -2,7 +2,6 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View
 import * as SecureStore from 'expo-secure-store';
 import instance  from '../../api';
 import React from 'react';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { useEffect } from 'react';

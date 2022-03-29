@@ -11,6 +11,8 @@ class commadeProduct extends Model
     protected $fillable=[
         'product_id', 
         'commande_id',
-        'quantity'
+        'quantity',
+        'product_name'
+
     ];
 }

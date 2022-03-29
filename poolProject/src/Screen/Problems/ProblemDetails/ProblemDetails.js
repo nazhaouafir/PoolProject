@@ -1,21 +1,14 @@
-import { StyleSheet,
-     Text, View, Image, ScrollView, FlatList, Pressable } from 'react-native';
+import { StyleSheet,Text, View, Image, ScrollView, ToastAndroid,FlatList, Pressable } from 'react-native';
 import React,{Component, useEffect, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
-import Grid from '../../../Components/Grid';
-import data from '../../../Data/data'
-import HorizontalList from '../../../Components/HorizontalList';
-import ProductList from '../../../Components/ProductList';
-import products from '../../../Data/products';
-import Header from '../../../Components/Header';
-import ProblemsList from '../ProblemsList';
-import VerticalList from '../../../Components/VerticalList';
 import { imageUrl } from '../../../api/imageUrl';
-import instance from '../../../api';
-import * as getProduits from '../../../Data/produits';
 import { problemItem } from '../../../api/services';
-
-const ProblemDetails =({route})=>{
+import ProductCard from '../../../Components/ProductCard';
+import * as cartActions from '../../../redux/actions/shop'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { getProduct } from '../../../api/services';
+const ProblemDetails =({actions,route})=>{
     const [isLoading, setLoading] = useState()
     const [produits, setProduits] = useState()
     const [problem, setProblem] = useState({
@@ -26,6 +19,15 @@ const ProblemDetails =({route})=>{
         products:[]
     })
     const {problemId} = route.params;
+    function onAddedPress(id){
+        actions.addItemToCart(id)
+        showToast()
+    }
+    function buyNowPress(id){
+  
+      actions.addItemToCart(id)
+        navigation.navigate('Cart');
+    }
     function getProblemItem(){
 
         problemItem(problemId)
@@ -45,7 +47,13 @@ const ProblemDetails =({route})=>{
       useEffect(()=>{
            return getProblemItem()
       },[])
-
+      useEffect(()=>{
+        getProduct().then((data)=>{
+          actions.setProducts(data)
+        }).catch((err)=>{
+          console.error(err)
+        })
+      },[])
   
  
     const navigation = useNavigation();
@@ -73,12 +81,37 @@ const ProblemDetails =({route})=>{
                 {problem.solution_problem}
                </Text>
        </View>
-            <ProductList title="Products" products={problem.products}/>
+            <View style={{flex:1}}>
+           <Text style={styles.textTitle}>Produits</Text>
+          <FlatList 
+           style={styles.listStyle}
+          data={problem.products}
+          keyExtractor={(item)=>item.id.toString()}
+        //   numColumns={2}
+          horizontal={true}
+          renderItem={({item})=> <ProductCard item = {item} buyNow={buyNowPress} onAdded={onAddedPress} />}
+          />
+    </View>
     </ScrollView>
   );
 };
 
-export default ProblemDetails;
+const ActionCreators = Object.assign(
+    {},
+    cartActions,
+  );
+  const mapStateToProps = state => ({
+    token: state.auth.token,
+    username: state.auth.username,
+    loading : state.auth.loading,
+    produits: state.shop.products,
+  
+  });
+  const mapDispatchToProps = dispatch =>({
+  
+    actions: bindActionCreators(ActionCreators, dispatch)
+  })
+  export default connect(mapStateToProps, mapDispatchToProps)(ProblemDetails);
 
 const styles = StyleSheet.create({
     slide1:{
@@ -120,5 +153,17 @@ const styles = StyleSheet.create({
          },
          shadowOpacity: 0.25,
          shadowRadius: 4,
-     }
+     },
+     listStyle:{
+        marginVertical: 10,
+        marginHorizontal: 10,
+    },
+    textTitle:{
+      textAlign: "center",
+      fontSize: 16,
+      paddingVertical: 10,
+      fontWeight: 'bold',
+      textTransform: 'uppercase'
+             
+  }
 });

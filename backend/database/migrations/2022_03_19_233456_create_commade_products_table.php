@@ -18,6 +18,7 @@ class CreateCommadeProductsTable extends Migration
             $table->foreignId('product_id')->nullable()->constrained('products');
             $table->foreignId('commande_id')->nullable()->constrained('commandes');
             $table->string('quantity')->nullable();
+            $table->string('product_name')->nullable();
             $table->timestamps();
         });
     }

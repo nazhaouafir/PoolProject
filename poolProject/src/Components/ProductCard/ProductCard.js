@@ -1,10 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
 import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity, Dimensions, Button, Touchable } from 'react-native'
-import CustomButton from '../CustomButton';
 const {width, height} = Dimensions.get('window')
 import { MaterialIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
 import { imageUrl } from '../../api/imageUrl';
 const ProductCard = ({style, imageStyle, item, onAdded,buyNow}) => {
 
@@ -50,7 +48,6 @@ const ProductCard = ({style, imageStyle, item, onAdded,buyNow}) => {
 export default ProductCard;
 const styles = StyleSheet.create({
     container :{
-        flex:1,
         width: width/2,
         height : 340,
         borderRadius: 8,

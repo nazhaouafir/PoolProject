@@ -1,12 +1,10 @@
-import { FlatList, SafeAreaViewBase, StyleSheet,ToastAndroid, Text, View, VirtualizedList } from 'react-native';
+import { FlatList, SafeAreaViewBase, StyleSheet,ToastAndroid, Text, View, VirtualizedList, SafeAreaView } from 'react-native';
 import React, { useEffect } from 'react';
 import ProductCard from '../ProductCard';
 import * as cartActions from '../../redux/actions/shop';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import instance from '../../api';
 import { getProduct } from '../../api/services';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 const ProductList = ({title,produits,products,actions}) => {
   
@@ -32,18 +30,16 @@ const ProductList = ({title,produits,products,actions}) => {
       navigation.navigate('Cart');
   }
   return (
-    <>
+    <View style={{justifyContent:'center',}}>
            <Text style={styles.textTitle}>{title}</Text>
           <FlatList 
            style={styles.listStyle}
           data={products ? products: produits}
           keyExtractor={(item)=>item.id.toString()}
           numColumns={2}
-          // horizontal 
-          // showsHorizontalScrollIndicator={false}
           renderItem={({item})=> <ProductCard item = {item} buyNow={buyNowPress} onAdded={onAddedPress} />}
           />
-    </>
+    </View>
   );
 };
 const ActionCreators = Object.assign(
@@ -66,8 +62,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
 const styles = StyleSheet.create({
     listStyle:{
         marginVertical: 10,
-        marginHorizontal: 10,
-       flexDirection: "column"
+        marginHorizontal: -10,
+       flexDirection: 'column'
     },
     textTitle:{
       textAlign: "center",

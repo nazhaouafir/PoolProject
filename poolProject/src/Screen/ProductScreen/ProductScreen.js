@@ -9,10 +9,7 @@ const ProductScreen = () => {
  
   return (
     <SafeAreaView>
-
-    <ScrollView>
     <ProductList title="Produits de piscine" />   
-  </ScrollView>
     </SafeAreaView>
   );
 };

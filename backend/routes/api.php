@@ -22,9 +22,11 @@ use Illuminate\Support\Facades\Route;
 */
 Route::apiResource('problem', ProblemController::class);
 Route::apiResource('product', ProductController::class);
-Route::apiResource('commande', CommandeController::class);
+Route::apiResource('/commande', CommandeController::class);
 Route::apiResource('infos', UserInfoController::class);
-Route::apiResource('category', CategoryController::class);
+// Route::middleware('auth:sanctum')->apiResource('category', CategoryController::class);
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     $user = $request->user();
     $user_info = User::with(['infos'])->find($user->id);
@@ -33,7 +35,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     ]); 
 
 });
-
+Route::middleware('auth:sanctum')->post('/commande', [CommandeController::class, 'store']);
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);

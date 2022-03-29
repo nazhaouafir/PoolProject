@@ -16,6 +16,9 @@ class CreateCommandesTable extends Migration
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->string('full_name')->nullable();
+            $table->string('adresse')->nullable();
+            $table->string('telefon')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });

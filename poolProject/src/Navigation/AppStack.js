@@ -10,20 +10,17 @@ import { createNativeStackNavigator,TransitionPresets } from '@react-navigation/
 import LoginScreen from '../Screen/AuthScreen/LoginScreen';
 import SignUpScreen from '../Screen/AuthScreen/SignUpScreen';
 import WelcomeScreen from '../Screen/WelcomeScreen';
-import * as SecureStore from 'expo-secure-store';
 import ProfileScreen from '../Screen/ProfileScreen';
 import Header from '../Components/Header';
-import pool_header from '../../assets/imgs/pool_header.jpg'
 import * as authActions from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CartScreen from '../Screen/CartScreen';
 import AdresseLivraison from '../Screen/AdresseLivraison';
-import ConfirmScreen from '../Screen/ConfirmScreen/ConfirmScreen';
 import UserScreen from '../Screen/UserScreen/UserScreen';
 const Stack = createNativeStackNavigator();
 
-const AppStack = ({actions}) => {
+const AppStack = () => {
   return (
     <Stack.Navigator>
         <Stack.Screen 
@@ -51,14 +48,6 @@ const AppStack = ({actions}) => {
         <Stack.Screen 
             name="Adresse"
             component={AdresseLivraison}
-            options={{
-              headerShown:true
-             } }
-             
-                 />
-        <Stack.Screen 
-            name="Confirmation"
-            component={ConfirmScreen}
             options={{
               headerShown:true
              } }

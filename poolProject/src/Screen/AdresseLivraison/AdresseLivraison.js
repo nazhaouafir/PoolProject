@@ -4,17 +4,11 @@ import CustomInput from '../../Components/CustomInput';
 import CustomButton from '../../Components/CustomButton';
 import {useForm} from 'react-hook-form';
 import { useNavigation } from '@react-navigation/core';
-import instance from '../../api'
-import * as Device from 'expo-device';
-import Logo from '../../../assets/imgs/logo.png'
-import * as SecureStore from 'expo-secure-store';
 import * as authActions from '../../redux/actions/auth';
 import * as cartActions from '../../redux/actions/shop';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import ModePaiement from '../../Components/ModePaiement';
-import VerticalList from '../../Components/VerticalList';
-import HorizontalList from '../../Components/HorizontalList/HorizontalList';
+import { sendCommande } from '../../api/services';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const AdresseLivraison = ({loading, actions,token,cart}) => {
@@ -22,41 +16,14 @@ const AdresseLivraison = ({loading, actions,token,cart}) => {
   const navigation = useNavigation();
   const {control, handleSubmit, watch, resetField, reset} = useForm();
   const pwd = watch('password');
-  const [user , setUser] = useState();
  
-
-
-    useEffect(()=>{
-      // console.warn(cart)
-    },[])
-  const onConservePress = (info) => {
-    // actions.loading(true);
-    // instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    // instance.get('/api/user').then((res)=>{
-    //                     setUser(res.data.user.id)
-    //                 }).catch((err)=>{
-    //                     console.error(err)
-    //                           })
-    //                           console.warn(user)
-    // instance.post('/api/infos',{
-    //     user_id:user,
-    //     full_name:info.full_name,
-    //     telefon:info.telefon,
-    //     email:info.email,
-    //     city:info.city,
-    //     adresse:info.adresse
-    // }).then((res)=>{
-    //     if(res.data.success == true){
-    //         navigation.navigate('Confirmation');
-    //     }
-    // }).catch((err)=>{
-    //   console.error(err)
-    // })
-
-
-    navigation.navigate('Confirmation');
-  };
-
+  const onSend=(data)=>{
+      sendCommande(token,cart,data)
+          .then(
+        (res)=>{
+            console.warn(res)
+      })
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -92,21 +59,16 @@ const AdresseLivraison = ({loading, actions,token,cart}) => {
               message: 'Votre Adresse doit comporter au moins 3 caractères',
             },
             maxLength: {
-              value: 24,
+              value: 114,
               message: 'Adresse should be max 24 characters long',
             },
           }}
         />              
         <CustomButton
           text="Valider"
-          onPress={handleSubmit(onConservePress)}
+          onPress={handleSubmit(onSend)}
           type="TERTIARY"
         />
-        {/* <CustomButton
-          text="Conserver"
-          onPress={onConservePress}
-          type="TERTIARY"
-        /> */}
       </View>}
     </ScrollView>
   );
