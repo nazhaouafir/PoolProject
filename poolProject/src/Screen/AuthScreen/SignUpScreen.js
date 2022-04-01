@@ -37,7 +37,6 @@ const SignUpScreen = ({loading, actions}) => {
         }else{
           actions.loading(false)
         }
-        console.error(res.data.message)
       }).catch((err)=>{
         actions.loading(false)
         console.error(err)

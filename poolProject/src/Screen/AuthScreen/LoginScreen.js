@@ -42,7 +42,6 @@ const navigation = useNavigation()
   useEffect(()=>{
    SecureStore.getItemAsync('token').then((token)=>{
           if(token){
-              console.warn(token)
               return navigation.navigate('Home')
           }
       }).catch((err)=>{
@@ -71,7 +70,6 @@ const onSignInPressed =(data)=>{
         }else{
           actions.loading(false)
         }
-        console.warn(res.data.messages)
       }).catch((err)=>{
         actions.loading(false)
         console.error(err)
@@ -92,12 +90,10 @@ const onSignUpPress =()=>{
   return (
    
     <ScrollView showsVerticalScrollIndicator={false}>
-     { token  ? 
+     { token || loading ? 
      <View style={[styles.container, styles.horizontal]}>
        <ActivityIndicator size={50} color='green' />
-       </View>
-     
-     :
+       </View>:
             <View style={styles.root}>
               {/* <Text>token : {token}</Text>
               <Text>{username}</Text> */}

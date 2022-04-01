@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, INCREASE_QUANTITY, DECREASE_QUANTITY, LOAD_CURRENT_ITEM, PRODUCTS, SET_TOTAL_PRICE } from "../constants";
+import { ADD_TO_CART, REMOVE_FROM_CART, INCREASE_QUANTITY, DECREASE_QUANTITY, LOAD_CURRENT_ITEM, PRODUCTS, SET_TOTAL_PRICE, VIDER_CART } from "../constants";
 
 export function addItemToCart(itemID){
    
@@ -37,6 +37,12 @@ export function setProducts(products){
     return {
       type : PRODUCTS,
       payload: products
+    }
+  }
+export function viderCart(cart){
+    return {
+      type : VIDER_CART,
+      payload: cart
     }
   }
 export function decreaseQuantity(item) {

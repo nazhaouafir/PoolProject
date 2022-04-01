@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\commande;
 use Illuminate\Http\Request;
-
+use App\Mail\CommandeMail;
+use Illuminate\Support\Facades\Mail;
 class CommandeController extends Controller
 {
     /**
@@ -27,16 +28,8 @@ class CommandeController extends Controller
     {
         $user = $request->user();
         $products = $request->products;
-        $adresse = $request->adresse;
-        $full_name = $request->full_name;
-        $telefon = $request->telefon;
-        $status = $request->status;
         $commande = commande::create([
             'user_id'=>$user->id,
-            'full_name'=>$full_name,
-            'adresse'=>$adresse,
-            'telefon'=>$telefon,
-            'status'=>$status
         ]);
         if($commande){
             
@@ -47,6 +40,8 @@ class CommandeController extends Controller
                                     'product_name'=>$item['title_product']]);
                     
                  }
+                 $url = "https://www.maroc-piscines.com/";
+                 Mail::to('ouafirnazha@gmail.com')->send(new CommandeMail($commande, $url));
                     return response()->json([
                         'success'=> true,
                     ]);

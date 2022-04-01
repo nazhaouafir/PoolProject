@@ -1,6 +1,5 @@
 import { ScrollView ,StyleSheet, BackHandler,Alert, Text, View, StatusBar, ScrollViewBase, ScrollViewComponent } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import data from '../../Data/data'
 import ProblemsList from '../Problems/ProblemsList';
 import ProductList from '../../Components/ProductList';
 import * as SecureStore from 'expo-secure-store';

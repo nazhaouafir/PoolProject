@@ -1,6 +1,6 @@
 import { ActionSheetIOS } from "react-native";
 import instance from "../../api";
-import { ADD_TO_CART, PRODUCTS, INCREASE_QUANTITY, LOAD_CURRENT_ITEM, REMOVE_FROM_CART, SET_TOTAL_PRICE } from "../constants"
+import { ADD_TO_CART,VIDER_CART, PRODUCTS, INCREASE_QUANTITY, LOAD_CURRENT_ITEM, REMOVE_FROM_CART, SET_TOTAL_PRICE } from "../constants"
 
 
 const initialState = {
@@ -51,6 +51,11 @@ const shopReducer = (state = initialState, action)=>{
             return {
                 ...state,
                 cart: state.cart.filter((item)=>item.id !== action.payload.id),
+            };
+        case VIDER_CART:
+            return {
+                ...state,
+                cart: [],
             };
     
         case LOAD_CURRENT_ITEM:

@@ -8,6 +8,7 @@ import VerticalList from '../../Components/VerticalList';
 import { MaterialIcons, AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getAdresses } from '../../api/services';
+import UserScreen from '../UserScreen/UserScreen';
  
 const CartScreen = ({products,cart,actions,item,token, totalPrice}) => {
   const navigation = useNavigation();
@@ -15,13 +16,8 @@ const CartScreen = ({products,cart,actions,item,token, totalPrice}) => {
   
   const [totalItems, setTotalItems] = useState(0);
   function finaliser(){
-    // getAdresses(token).then((data)=>{
-      
-    //     navigation.navigate('Adresse')
-    
-    // console.warn(data)
-    // })
-    navigation.navigate('Adresse');
+    navigation.navigate('Edit',{type:'cmd'});
+    return 
   }
   
   useEffect(()=>{ 
@@ -64,6 +60,7 @@ const CartScreen = ({products,cart,actions,item,token, totalPrice}) => {
                        Finaliser la commande
                     </Text>
              </Pressable>
+            
           </View>
       </View>
     </SafeAreaView>

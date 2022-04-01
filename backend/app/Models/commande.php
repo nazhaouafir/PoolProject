@@ -18,7 +18,7 @@ class commande extends Model
         'status',
     ];
     public function products(){
-        return $this->belongsToMany(Product::class, 'commade_products')->withTimestamps()->withPivot('quantity');
+        return $this->belongsToMany(Product::class, 'commade_products')->withTimestamps()->withPivot('quantity','product_name');
     }
     public function client(){
         return $this->belongsTo(User::class, 'user_id');

@@ -21,14 +21,14 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'adresse',
+        'telefon',
         'password',
+
     ];
 
     public function commandes(){
         return $this->hasMany(commande::class);
-    }
-    public function infos(){
-        return $this->hasMany(UserInfo::class);
     }
 
     /**

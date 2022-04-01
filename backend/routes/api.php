@@ -9,6 +9,8 @@ use App\Http\Controllers\UserInfoController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +31,46 @@ Route::apiResource('infos', UserInfoController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     $user = $request->user();
-    $user_info = User::with(['infos'])->find($user->id);
     return response()->json([
-        'user'=>$user_info
+        'user'=>$user
     ]); 
+});
+Route::middleware('auth:sanctum')->post('/edituser', function (Request $request) {
+    
+    $user = $request->user();
+    $username = $request->username;
+    $email = $request->email;
+    $adresse = $request->adresse;
+    $telefon = $request->telefon;
+    $validator = Validator::make([
+        'name'=>$username,
+        'email'=>$email,
+        'adresse'=>$adresse,
+        'telefon'=>$telefon,
+    ],
+    [
+        'name'=>['required'],
+        'adresse'=>['required'],
+        'telefon'=>['required'],
+        'email'=>['required', 'email',Rule::unique('users')->ignore($user->id),],
+    ]
+    );
+    if($validator->fails()){
+        return response()->json(['status'=>false, 'message'=>$validator->errors()]);
+
+    }else{
+         $user->update([
+        'name'=>$username,
+        'email'=>$email,
+        'adresse'=>$adresse,
+        'telefon'=>$telefon
+        ]);
+        return response()->json(['status'=>true, 'user'=>$user]);
+    }
+
+    
+
+     
 
 });
 Route::middleware('auth:sanctum')->post('/commande', [CommandeController::class, 'store']);

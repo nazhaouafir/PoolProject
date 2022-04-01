@@ -19,7 +19,6 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, isLoad
           styles[`text_${type}`],
           fgColor ? {color: fgColor} : {},
         ]}>
-         { isLoading ?  <ActivityIndicator size="small" style={{flexDirection:'row', marginRight:10}} color="white" /> : ''}
         {text}
       </Text>
       </View>

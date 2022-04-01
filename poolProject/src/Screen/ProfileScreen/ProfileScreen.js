@@ -21,7 +21,6 @@ const ProfileScreen = ({loading,token,actions}) => {
         SecureStore.getItemAsync('token').then((mytoken)=>{
               if(mytoken)
               { 
-                // console.warn(mytoken)
                 actions.setToken(mytoken)}
           }).catch((err)=>{
             console.error(err)
@@ -31,7 +30,6 @@ const ProfileScreen = ({loading,token,actions}) => {
                     instance.get('/api/user').then((res)=>{
                         setUser(res.data.user.name)
                         setEmail(res.data.user.email)
-                        // console.warn(res.data)
                     }).catch((err)=>{
                         console.error(err)
                               })
@@ -43,7 +41,6 @@ const ProfileScreen = ({loading,token,actions}) => {
       {
         instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         instance.post('/api/logout', token).then((res)=>{
-          console.warn(res.data)
             SecureStore.deleteItemAsync('token').then(()=>{
               actions.setToken(null)
               actions.loading(false)
@@ -83,16 +80,18 @@ const ProfileScreen = ({loading,token,actions}) => {
                 <Entypo name="email" size={24} color="" /> {email}
                 </Text>
         </View>
-        {/* <View style={styles.logoutSection}>
+        <View style={styles.logoutSection}>
+          <Pressable onPress={()=> navigation.navigate('Edit',{type:'edit'})}>
              <Text style={styles.logout} >
                 <FontAwesome5 name="tools" size={20} color="#27427C" /> Modifier vos informations
                 </Text>               
-        </View> */}
-        <View style={styles. logoutSection}>
+          </Pressable>
+        </View>
+        {/* <View style={styles. logoutSection}>
                 <Text style={styles.logout} >
                 <Zocial name="cart" size={24} color="#27427C" /> Mes commandes
                 </Text>
-        </View>
+        </View> */}
         <View>
             <Pressable style={styles.logoutSection} onPress={()=>onLogout()}>                
                 <Text style={styles.logout} >

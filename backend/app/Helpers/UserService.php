@@ -43,6 +43,8 @@ class UserService{
             $user = User::create([
                 'name'=>$this->name,
                  'email'=>$this->email,
+                 'adresse'=>'',
+                 'telefon'=>'',
                  'password'=>Hash::make($this->password)
             ]);
             $token = $user->createToken($deviceName)->plainTextToken;

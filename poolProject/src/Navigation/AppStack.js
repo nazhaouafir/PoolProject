@@ -16,8 +16,9 @@ import * as authActions from '../redux/actions/auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CartScreen from '../Screen/CartScreen';
-import AdresseLivraison from '../Screen/AdresseLivraison';
 import UserScreen from '../Screen/UserScreen/UserScreen';
+import ValidationScreen from '../Screen/ValidationScreen/ValidationScreen';
+
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -35,7 +36,8 @@ const AppStack = () => {
             name="Cart"
             component={CartScreen}
             options={{
-              headerShown:true
+              headerShown:true,
+              title:'Panier'
              } }
              
                  />
@@ -43,16 +45,18 @@ const AppStack = () => {
             name="Edit"
             component={UserScreen}
             options={{
-              headerShown:true
+              headerShown:true,
+              title: 'Informations'
+
              } }/>
         <Stack.Screen 
-            name="Adresse"
-            component={AdresseLivraison}
-            options={{
-              headerShown:true
-             } }
-             
-                 />
+            name="Validation"
+            component={ValidationScreen}
+             options={({ navigation, route }) => ({
+          // headerTitle: (props) => <Header {...props} />,
+          header: ()=><Header />,
+          headerTransparent:true,
+        })}/>
         <Stack.Screen 
             name="Profile"
             component={ProfileScreen}
@@ -84,7 +88,11 @@ const AppStack = () => {
         <Stack.Screen 
         name="Products"
         component={ProductScreen}
-        option={{}} />
+        options={({ navigation, route }) => ({
+          // headerTitle: (props) => <Header {...props} />,
+          header: ()=><Header />,
+          headerTransparent:true,
+        })} />
          <Stack.Screen 
         name="Home"
         component={HomeScreen}

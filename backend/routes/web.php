@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MailController;
 use App\Http\Livewire\Commandes\CommandesList;
 use App\Http\Livewire\Customers\CustomersList;
 use App\Http\Livewire\Customers\EditCustomer;
@@ -34,3 +35,4 @@ Route::get('edit-product/{id}', EditProduct::class)->name('edit-product');
 Route::get('edit-customer/{id}', EditCustomer::class)->name('edit-customer');
 Route::get('add-problem', AddProblem::class)->name('add-problem');
 Route::get('add-product', AddProduct::class)->name('add-product');
+Route::get('/mail-send',[MailController::class, 'sendMail']);

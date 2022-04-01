@@ -12,11 +12,15 @@ import instance from "../../api";
 
 const WelcomeScreen = ({token,actions}) => {
       useEffect(()=>{
+       
           SecureStore.getItemAsync('token').then((mytoken)=>{
             if(mytoken)
-            {actions.setToken(mytoken)}
+            {
+              actions.setToken(mytoken)}
             else{
-              actions.setToken(null)
+              SecureStore.deleteItemAsync('token').then(()=>{
+                actions.setToken(null)
+              })
             }
           })
       })

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import ProductList from '../../Components/ProductList';
 const {width,height} = Dimensions.get('window')
-import products from '../../Data/products';
 import { category, problemItem, productItem } from '../../api/services';
 import { imageUrl } from '../../api/imageUrl';
 import * as cartActions from '../../redux/actions/shop';

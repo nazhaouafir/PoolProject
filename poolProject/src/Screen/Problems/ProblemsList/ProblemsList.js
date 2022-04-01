@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import Grid from '../../../Components/Grid';
 import { useNavigation } from '@react-navigation/native';
 import instance from '../../../api';
-import data from '../../../Data/data';
 import { getProblems } from '../../../api/services';
 
 const ProblemsList = () => {

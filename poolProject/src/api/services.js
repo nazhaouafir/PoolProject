@@ -79,24 +79,31 @@ export async function getUserID(token){
 
     }
 }
-export async function editUser(token){
+export async function editUser(token,info){
     try{
-        
+        // edituser
+        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const res = await instance.post('/api/edituser',{
+            token:token,
+            username: info.username,
+            email:info.email,
+            adresse:info.adresse,
+            telefon: info.telefon,
+        });
+
+        return res.data
     }catch(err){
 
     }
 }
-export async function sendCommande(token,products,info){
+export async function sendCommande(token,products){
     try{
         instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         const res = await instance.post('/api/commande',{
             token:token,
             products: products,
-            full_name: info.full_name,
-            adresse:info.adresse,
-            telefon: info.telefon,
-            status:'Ok'
         });
 
         return res

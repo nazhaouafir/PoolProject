@@ -10,8 +10,12 @@ const CustomInput = ({
   secureTextEntry,
   textType,
   label,
+  editType,
   labelName='label'
 }) => {
+  function test(){
+        console.warn('hello from test')
+  }
   return (
     <Controller
       control={control}
@@ -28,6 +32,7 @@ const CustomInput = ({
             <TextInput
               value={value}
               onChangeText={onChange}
+              onKeyPress={editType}
               onBlur={onBlur}
               placeholder={placeholder}
               style={styles.input}
