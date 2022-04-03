@@ -25,11 +25,16 @@ class UserService{
         [
             'name'=>['nullable'],
             'email'=>['required', 'email', $validationRule],
-            'password'=>['required', 'string', Password::min(4)]
-        ]
+            'password'=>['required', 'string']
+        ],
+       $messages= [
+            'exists:users'=>'Cet utilisateur n\'existe pas.',
+            'unique:users'=>'Adresse E-mail existe déjà',
+       ],
+       
         );
         if($validator->fails()){
-            return ['status'=>false, 'message'=>$validator->errors()];
+            return ['status'=>false, 'message'=>$messages];
 
         }else{
             return ['status'=>true];
@@ -51,6 +56,8 @@ class UserService{
             return ['status'=> true, 'token'=>$token, 'user'=>$user, 'device'=>$deviceName];
         }
     }
+
+
     public function login($deviceName){
         $validate = $this->validateInput(true);
         if($validate['status']== false){
@@ -61,9 +68,8 @@ class UserService{
             if(Hash::check($this->password, $user->password)){
                 $token = $user->createToken($deviceName)->plainTextToken;
                 return ['status'=> true, 'token'=>$token, 'user'=>$user, 'device'=>$deviceName];
-
             }else{
-                return ['status'=>false, 'messages'=>['password'=> 'incorrect Password']];
+                return ['status'=>false, 'message'=> ['password'=>'Mot de passe incorrect !']];
             }
         }
     }

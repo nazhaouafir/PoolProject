@@ -39,16 +39,19 @@ Route::middleware('auth:sanctum')->post('/edituser', function (Request $request)
     
     $user = $request->user();
     $username = $request->username;
+    $full_name = $request->full_name;
     $email = $request->email;
     $adresse = $request->adresse;
     $telefon = $request->telefon;
     $validator = Validator::make([
         'name'=>$username,
+        'full_name'=>$full_name,
         'email'=>$email,
         'adresse'=>$adresse,
         'telefon'=>$telefon,
     ],
     [
+        'full_name'=>['required'],
         'name'=>['required'],
         'adresse'=>['required'],
         'telefon'=>['required'],
@@ -61,6 +64,7 @@ Route::middleware('auth:sanctum')->post('/edituser', function (Request $request)
     }else{
          $user->update([
         'name'=>$username,
+        'full_name'=>$full_name,
         'email'=>$email,
         'adresse'=>$adresse,
         'telefon'=>$telefon

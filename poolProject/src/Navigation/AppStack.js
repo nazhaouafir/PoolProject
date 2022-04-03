@@ -18,19 +18,29 @@ import { bindActionCreators } from 'redux';
 import CartScreen from '../Screen/CartScreen';
 import UserScreen from '../Screen/UserScreen/UserScreen';
 import ValidationScreen from '../Screen/ValidationScreen/ValidationScreen';
+import * as SecureStore from 'expo-secure-store';
+import { getUser } from '../api/services';
 
 const Stack = createNativeStackNavigator();
 
-const AppStack = () => {
+const AppStack = ({actions,token}) => {
+  useEffect(()=>{
+    getUser(token).then((res)=>{
+      if(!res){
+        SecureStore.deleteItemAsync('token')
+        actions.setToken(null)
+      }
+    })  
+  },[])
   return (
     <Stack.Navigator>
+
         <Stack.Screen 
             name="Welcome"
             component={WelcomeScreen}
             options={{
               headerShown:false
              } }
-             
                  />
         <Stack.Screen 
             name="Cart"
@@ -38,9 +48,9 @@ const AppStack = () => {
             options={{
               headerShown:true,
               title:'Panier'
-             } }
-             
-                 />
+             } } />
+
+                 {/* **************** */}
         <Stack.Screen 
             name="Edit"
             component={UserScreen}
@@ -62,25 +72,15 @@ const AppStack = () => {
             component={ProfileScreen}
             option={{
             }} />
-            <Stack.Screen 
+      {/* ********** */}
+
+        <Stack.Screen 
                 name="register"
                 component={SignUpScreen}
                 option={{
                 title: 'register',
                     
                 }} />
-       <Stack.Screen 
-        name="productDetails"
-        component={ProductDetails}
-        options={({ navigation, route }) => ({
-          // headerTitle: (props) => <Header {...props} />,
-          header: ()=><Header />,
-          headerTransparent:true,
-        })}/>
-      <Stack.Screen 
-        name="modal"
-        component={modalScreen}
-        option={{}} />
         <Stack.Screen 
         name="Login"
         component={LoginScreen}
@@ -93,6 +93,14 @@ const AppStack = () => {
           header: ()=><Header />,
           headerTransparent:true,
         })} />
+    <Stack.Screen 
+        name="productDetails"
+        component={ProductDetails}
+        options={({ navigation, route }) => ({
+          // headerTitle: (props) => <Header {...props} />,
+          header: ()=><Header />,
+          headerTransparent:true,
+        })}/>
          <Stack.Screen 
         name="Home"
         component={HomeScreen}

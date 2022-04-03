@@ -28,11 +28,13 @@ class AuthController extends Controller
     public function edit(Request $request){
         
         $username = $request->username;
+        $full_name = $request->full_name;
         $email = $request->email;
         $user_id = $request->user_id;
         $user = User::find($user_id);
 
         $user->update([
+            'name'=>$username,
             'name'=>$username,
             'email'=>$email
         ]);

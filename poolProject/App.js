@@ -8,6 +8,7 @@ import * as SecureStore from 'expo-secure-store';
 const store = configureStore();
 
 const App = () => { 
+ 
   return (
     <Provider store={store}>
 <NavigationContainer>

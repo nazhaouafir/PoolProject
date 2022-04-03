@@ -1,12 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable, ActivityIndicator} from 'react-native';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, isLoading}) => {
+const CustomButton = ({onPress,mystyle, text, type = 'PRIMARY', bgColor, fgColor, isLoading}) => {
   return (
     <Pressable
       onPress={onPress}
       disabled={isLoading}
       style={[
+        mystyle,
         styles.container,
         styles[`container_${type}`],
         isLoading ? {backgroundColor: 'gray', opacity:0.5}: {}, 
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     color: 'white',
+    
   },
 
   text_SECONDARY: {

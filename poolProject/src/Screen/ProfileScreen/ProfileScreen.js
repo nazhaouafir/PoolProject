@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import instance  from '../../api';
 import React from 'react';
@@ -9,13 +9,20 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Zocial } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import * as authActions from '../../redux/actions/auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Entypo } from '@expo/vector-icons';
+import pool from '../../../assets/imgs/pool.png'
+import Connexion from '../../Components/Connexion';
 const ProfileScreen = ({loading,token,actions}) => {
+  const {height} = useWindowDimensions(); 
+
     const [user , setUser] = useState();
     const [email , setEmail] = useState();
+    const [phone , setPhone] = useState();
+    const [adresse , setAdresse] = useState();
     const navigation = useNavigation()
     useEffect(()=>{      
         SecureStore.getItemAsync('token').then((mytoken)=>{
@@ -30,6 +37,8 @@ const ProfileScreen = ({loading,token,actions}) => {
                     instance.get('/api/user').then((res)=>{
                         setUser(res.data.user.name)
                         setEmail(res.data.user.email)
+                        setPhone(res.data.user.telefon)
+                        setAdresse(res.data.user.adresse)
                     }).catch((err)=>{
                         console.error(err)
                               })
@@ -44,7 +53,7 @@ const ProfileScreen = ({loading,token,actions}) => {
             SecureStore.deleteItemAsync('token').then(()=>{
               actions.setToken(null)
               actions.loading(false)
-              navigation.navigate('Welcome')
+              // navigation.navigate('Welcome')
             })
         }).catch((err)=>{
           console.error(err)
@@ -61,47 +70,74 @@ const ProfileScreen = ({loading,token,actions}) => {
      }
 
   return (
-      <ScrollView>
-          {!user ?<View style={[styles.container, styles.horizontal]}>
-    <ActivityIndicator size={50} color='green' />
-    </View> :
-    <View style={styles.container}>
-  
-        <View style={styles.informationStyle}>
-            <Text style={{fontSize: 20,textTransform:'uppercase',fontWeight: '200',color: '#105D8F',margin: 10,}}>Mon Compte</Text>
-        </View>
-        <View style={styles. logoutSection}>
-                <Text style={styles.logout} >
-                <AntDesign name="user"  size={24} color="" /> {user}
-                </Text>
-        </View>
-        <View style={styles. logoutSection}>
-                <Text style={styles.logout} >
-                <Entypo name="email" size={24} color="" /> {email}
-                </Text>
-        </View>
-        <View style={styles.logoutSection}>
-          <Pressable onPress={()=> navigation.navigate('Edit',{type:'edit'})}>
-             <Text style={styles.logout} >
-                <FontAwesome5 name="tools" size={20} color="#27427C" /> Modifier vos informations
-                </Text>               
-          </Pressable>
-        </View>
-        {/* <View style={styles. logoutSection}>
-                <Text style={styles.logout} >
-                <Zocial name="cart" size={24} color="#27427C" /> Mes commandes
-                </Text>
-        </View> */}
-        <View>
-            <Pressable style={styles.logoutSection} onPress={()=>onLogout()}>                
-                <Text style={styles.logout} >
-                    <AntDesign name="poweroff"  size={24} color="#27427C" /> Deconnexion
-                </Text>
-            </Pressable>            
-        </View>
-      
-    </View>}  
-      </ScrollView>
+    <SafeAreaView>
+      { token ? <ScrollView>
+            {!user ?<View style={[styles.container, styles.horizontal]}>
+      <ActivityIndicator size={50} color='green' />
+      </View> :
+      <View style={styles.container}>
+    
+          <View style={styles.informationStyle}>
+              <Text style={{fontSize: 20,textTransform:'uppercase',fontWeight: '200',color: '#105D8F',margin: 10,}}>Mon Compte</Text>
+          </View>
+          <View style={styles. logoutSection}>
+                  <Text style={styles.logout} >
+                  <AntDesign name="user"  size={20} color="#27427C" /> {user}
+                  </Text>
+          </View>
+          <View style={styles. logoutSection}>
+                  <Text style={styles.logout} >
+                  <Entypo name="email" size={20} color="#27427C" /> {email}
+                  </Text>
+          </View>
+          <View style={styles. logoutSection}>
+                  <Text style={styles.logout} >
+                  <Feather name="phone" size={20} color="#27427C" /> {phone}
+                  </Text>
+          </View>
+          <View style={styles. logoutSection}>
+                  <Text style={styles.logout} >
+                  <Entypo name="location" size={24} color="#27427C" /> {adresse}
+                  </Text>
+          </View>
+          <View style={styles.logoutSection}>
+            <Pressable onPress={()=> navigation.navigate('Edit',{type:'edit'})}>
+               <Text style={styles.logout} >
+                  <FontAwesome5 name="tools" size={20} color="#27427C" /> Modifier vos informations
+                  </Text>               
+            </Pressable>
+          </View>
+          {/* <View style={styles. logoutSection}>
+                  <Text style={styles.logout} >
+                  <Zocial name="cart" size={24} color="#27427C" /> Mes commandes
+                  </Text>
+          </View> */}
+          <View>
+              <Pressable style={styles.logoutSection} onPress={()=>onLogout()}>                
+                  <Text style={styles.logout} >
+                      <AntDesign name="poweroff"  size={24} color="#27427C" /> Deconnexion
+                  </Text>
+              </Pressable>            
+           <Image
+            source={pool}
+            style={[styles.logo_2, {height: height * 0.3}]}
+            resizeMode="contain"
+          />
+          </View>
+         
+      </View>}  
+        </ScrollView>
+        :
+        <>
+        <Connexion />
+          <Image
+          source={pool}
+          style={[styles.logo_2, {height: height * 0.3}]}
+          resizeMode="contain"
+          />
+        </>   
+        }
+    </SafeAreaView>
   
   );
 };
@@ -127,6 +163,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor:'white'
     },
+    
     profileStyle:{
       flex: 1,
       alignItems: 'center',
@@ -144,6 +181,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       paddingVertical: 10,
       marginVertical: 5,
+    },
+    logo_2:{
+      width: '70%',
+      maxWidth: 300,
+      maxHeight: 120,
+      alignSelf:'center'
     },
     logoutSection:{
         backgroundColor: "white",

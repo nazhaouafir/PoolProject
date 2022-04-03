@@ -10,15 +10,13 @@ Informations de client
         <th>Adresse email</th>
         <th>Adresse  </th>
         <th>Téléphone  </th>
-        <th>Date  </th>
     </thead>
     <tbody>
         <tr>
-            <td>{{$commande->client->name}}  </td>
+            <td>{{$commande->client->full_name}}  </td>
             <td>{{$commande->client->email}}  </td>
             <td>{{$commande->client->adresse}}</td>
             <td>{{$commande->client->telefon}}</td>
-            <td>{{$commande->created_at}}</td>
         </tr>
     </tbody>
 </table>

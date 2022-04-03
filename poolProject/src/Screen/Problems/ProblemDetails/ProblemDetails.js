@@ -1,14 +1,15 @@
-import { StyleSheet,Text, View, Image, ScrollView, ToastAndroid,FlatList, Pressable } from 'react-native';
+import { StyleSheet,Text, View, Image, ScrollView, ToastAndroid,FlatList, Pressable, ActivityIndicator } from 'react-native';
 import React,{Component, useEffect, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { imageUrl } from '../../../api/imageUrl';
 import { problemItem } from '../../../api/services';
 import ProductCard from '../../../Components/ProductCard';
 import * as cartActions from '../../../redux/actions/shop'
+import * as authActions from '../../../redux/actions/auth'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getProduct } from '../../../api/services';
-const ProblemDetails =({actions,route})=>{
+const ProblemDetails =({actions,route, loading})=>{
     const [isLoading, setLoading] = useState()
     const [produits, setProduits] = useState()
     const [problem, setProblem] = useState({
@@ -29,7 +30,7 @@ const ProblemDetails =({actions,route})=>{
         navigation.navigate('Cart');
     }
     function getProblemItem(){
-
+       actions.loading(true)
         problemItem(problemId)
         .then((item)=>{
             setProblem({
@@ -39,9 +40,10 @@ const ProblemDetails =({actions,route})=>{
                 solution_problem:item.solution_problem,
                 products:item.products
             })
-            console.warn(item)
-        }).catch((err)=>{
+            actions.loading(false)
+                    }).catch((err)=>{
             console.error(err)
+            actions.loading(false)
         })
       }
       useEffect(()=>{
@@ -61,13 +63,17 @@ const ProblemDetails =({actions,route})=>{
   return (
       <ScrollView 
       showsVerticalScrollIndicator={false} >
-        <View>
+       {loading ? <View style={{justifyContent:'center', marginVertical:100}}>
+                <ActivityIndicator size={50} color='green' />
+          </View>
+     
+          :<>
+       <View>
             <Image  style={styles.image}
          source={{uri:`${imageUrl}/${problem.image_problem}`}} />                
            <Text style={styles.Prblm_title}>
               {problem.problemName}
-           </Text>
-           
+           </Text>     
        </View>
        <View style={styles.containerSection}>
            <Text style={styles.title}>Problème</Text>
@@ -81,17 +87,19 @@ const ProblemDetails =({actions,route})=>{
                 {problem.solution_problem}
                </Text>
        </View>
-            <View style={{flex:1}}>
-           <Text style={styles.textTitle}>Produits</Text>
-          <FlatList 
-           style={styles.listStyle}
-          data={problem.products}
-          keyExtractor={(item)=>item.id.toString()}
-        //   numColumns={2}
-          horizontal={true}
-          renderItem={({item})=> <ProductCard item = {item} buyNow={buyNowPress} onAdded={onAddedPress} />}
-          />
-    </View>
+        <View style={{flex:1}}>
+        <Text style={styles.textTitle}>Produits</Text>
+      <FlatList 
+        style={styles.listStyle}
+      data={problem.products}
+      keyExtractor={(item)=>item.id.toString()}
+    //   numColumns={2}
+      horizontal={true}
+      renderItem={({item})=> <ProductCard item = {item} buyNow={buyNowPress} onAdded={onAddedPress} />}
+      />
+          </View>
+         </>
+          }
     </ScrollView>
   );
 };
@@ -99,6 +107,7 @@ const ProblemDetails =({actions,route})=>{
 const ActionCreators = Object.assign(
     {},
     cartActions,
+    authActions
   );
   const mapStateToProps = state => ({
     token: state.auth.token,

@@ -32,7 +32,7 @@ class CommandeMail extends Mailable
      */
     public function build()
     {
-        return $this->from('info@maroc-piscines.com')
+        return $this->subject('Nouvelle Commande')->from('info@maroc-piscines.com')
                 ->markdown('emails.commandemail');
     }
 }

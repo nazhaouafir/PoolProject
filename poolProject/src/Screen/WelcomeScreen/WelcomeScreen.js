@@ -11,19 +11,6 @@ import { bindActionCreators } from 'redux';
 import instance from "../../api";
 
 const WelcomeScreen = ({token,actions}) => {
-      useEffect(()=>{
-       
-          SecureStore.getItemAsync('token').then((mytoken)=>{
-            if(mytoken)
-            {
-              actions.setToken(mytoken)}
-            else{
-              SecureStore.deleteItemAsync('token').then(()=>{
-                actions.setToken(null)
-              })
-            }
-          })
-      })
 
   const navigation = useNavigation();
   const loginPressed = () => {

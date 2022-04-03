@@ -26,6 +26,7 @@ import instance from '../../api/'
 import * as authActions from '../../redux/actions/auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Message from '../../Components/Message';
 
 //start 
 const LoginScreen = ({actions,token,user, loading}) => {
@@ -36,8 +37,12 @@ const LoginScreen = ({actions,token,user, loading}) => {
   } = useForm();
 
   const {height} = useWindowDimensions(); 
-const navigation = useNavigation()
-
+  const navigation = useNavigation()
+  const [error, setError] = useState({
+    email:'',
+    password:'',
+    server:''
+  })
 //mount_updtae
   useEffect(()=>{
    SecureStore.getItemAsync('token').then((token)=>{
@@ -47,7 +52,6 @@ const navigation = useNavigation()
       }).catch((err)=>{
         console.error(err)
       })
- return true
   },[])
 //functions
 //login
@@ -58,6 +62,12 @@ const onSignInPressed =(data)=>{
       email: data.email,
       password: data.password
     }).then((res)=>{
+      if(res.data.message){
+        setError({
+          email:res.data.message['exists:users'],
+          password: res.data.message['password']
+        })
+      }
       actions.setUser(res.data.user)
       SecureStore.setItemAsync('token', res.data.token);
       SecureStore.getItemAsync('token').then((token)=> {
@@ -75,7 +85,7 @@ const onSignInPressed =(data)=>{
         console.error(err)
       })
   }).catch((err)=>{
-    console.error(err)
+     setError({server:err.message})
     actions.loading(false)
   })
 
@@ -85,7 +95,6 @@ const onSignInPressed =(data)=>{
 const onSignUpPress =()=>{
    navigation.navigate('register')
   }
-
  
   return (
    
@@ -102,6 +111,8 @@ const onSignUpPress =()=>{
               style={[styles.logo, {height: height * 0.3}]}
               resizeMode="contain"
             />
+        {error.email || error.password?<Message errorText={error} type='WARNING' />:<></>}
+        {error.server?<Message errorText={error} type='DANGER' />:<></>}
               <CustomInput
                 name="email"
                 placeholder="E-mail"
@@ -122,8 +133,6 @@ const onSignUpPress =()=>{
                 }}
               />    
           <CustomButton text="SE CONNECTER" onPress={handleSubmit(onSignInPressed)} />
-          
-        
               <Pressable onPress={()=>onSignUpPress()}>
                 <Text 
                 style={{color:"#2b49a1ba", fontSize:16, fontWeight:'bold', marginVertical:10}}>
@@ -166,6 +175,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginTop: '20%',
+    marginBottom:25,
     width: '70%',
     maxWidth: 300,
     maxHeight: 120,

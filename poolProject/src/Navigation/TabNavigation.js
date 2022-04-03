@@ -12,8 +12,8 @@ const Tab = createMaterialTopTabNavigator();
            screenOptions={{
             tabBarLabelStyle: { fontSize: 12 },
             tabBarStyle: { backgroundColor: 'white' }, }}>
-                <Tab.Screen name="Problèmes" component={ProblemsList} />
                 <Tab.Screen name="Produits" component={ProductScreen}/>
+                <Tab.Screen name="Problèmes" component={ProblemsList} />
             </Tab.Navigator>
        )
             

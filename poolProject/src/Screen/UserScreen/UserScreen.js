@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import {View, Text, StyleSheet, ScrollView, useWindowDimensions, ActivityIndicator, Image} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, useWindowDimensions, ActivityIndicator, Image, SafeAreaView} from 'react-native';
 import CustomInput from '../../Components/CustomInput';
 import CustomButton from '../../Components/CustomButton';
 import {useForm} from 'react-hook-form';
@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as authActions from '../../redux/actions/auth';
 import * as cartActions from '../../redux/actions/shop';
+import Connexion from '../../Components/Connexion';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const UserScreen = ({token,route,loading,cart, actions}) => {
@@ -26,6 +27,7 @@ const UserScreen = ({token,route,loading,cart, actions}) => {
          getUser(token).then((user)=>{
                
               setValue('username', user.name, { shouldDirty: true })
+              setValue('full_name', user.full_name, { shouldDirty: true })
               setValue('email', user.email, { shouldDirty: true })
               setValue('adresse', user.adresse, { shouldDirty: true })
               setValue('telefon', user.telefon, { shouldDirty: true })
@@ -40,6 +42,7 @@ const UserScreen = ({token,route,loading,cart, actions}) => {
 
               getUser(token).then((user)=>{
                 setValue('username', user.name, { shouldDirty: true })
+                setValue('full_name', user.full_name, { shouldDirty: true })
                 setValue('email', user.email, { shouldDirty: true })
                 setValue('adresse', user.adresse, { shouldDirty: true })
                 setValue('telefon', user.telefon, { shouldDirty: true })
@@ -61,7 +64,6 @@ const UserScreen = ({token,route,loading,cart, actions}) => {
     }
     const onSendPress=()=>{
       actions.loading(true)
-      
       sendCommande(token,cart).then((res)=>{
         if(res.data.success==true){
           actions.viderCart(cart) 
@@ -75,92 +77,118 @@ const UserScreen = ({token,route,loading,cart, actions}) => {
 
   }
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-    {loading ?<View style={[styles.container, styles.horizontal]}>
-     <ActivityIndicator size={50} color='green' />
-     </View>
-      :
-    <View style={styles.root}>
-      <Text style={styles.title}>{mytype=='cmd' ? 'Adresse de la Livraison':'Modifier vos informations'}</Text>
-      {/* <Text style={{textAlign:'left'}}>helov</Text> */}
-      <CustomInput
-        labelName="Nom & Prénom *"
-        label
-        editType={onChangePresse}
-        name="username"
-        control={control}
-        placeholder=""
-        rules={{
-          required: 'Nom et prénom requis',
-          minLength: {
-            value: 3,
-            message: 'Le nom doit comporter au moins 3 caractères',
-          },
-          maxLength: {
-            value: 34,
-            message: 'Username should be max 24 characters long',
-          },
-        }}
-      />
-      <CustomInput
-        name="email"
-        label
-        editType={onChangePresse}
-        labelName="Adresse email *"
-        control={control}
-        placeholder="E-mail"
-        textType="email-address"
-        rules={{
-          required: 'E-mail requis',
-          pattern: {value: EMAIL_REGEX, message: 'Email is invalid'},
-        }}
-      />
-      <CustomInput
-       labelName="Numéro de téléphone *"
-       label
-       editType={onChangePresse}
-          name="telefon"
-          control={control}
-          placeholder=""
-          rules={{
-            required: 'Téléphone requis',
-           
-          }}
-        />
-        <CustomInput
-         labelName="Adresse de la livraison *"
-         label
-         editType={onChangePresse}
-          name="adresse"
-          control={control}
-          placeholder=""
-          rules={{
-            required: 'Adresse requis',
-            minLength: {
-              value: 3,
-              message: 'Votre Adresse doit comporter au moins 3 caractères',
-            },
-            maxLength: {
-              value: 114,
-              message: 'Adresse should be max 24 characters long',
-            },
-          }}
-        /> 
-     {mytype=='edit'||type=='edit'? <CustomButton 
-        text="Enregistrer les modifications!"
-        onPress={handleSubmit(onEditPresse)}
-      />:<></>
+    <SafeAreaView>
+     { token ?
+      (<ScrollView showsVerticalScrollIndicator={false}>
+          {loading ?<View style={[styles.container, styles.horizontal]}>
+          <ActivityIndicator size={50} color='green' />
+          </View>
+            :
+          <View style={styles.root}>
+            <Text style={styles.title}>{mytype=='cmd' ? 'Adresse de la Livraison':'Modifier vos informations'}</Text>
+            {/* <Text style={{textAlign:'left'}}>helov</Text> */}
+            <CustomInput
+              labelName="Utilisateur *"
+              label
+              editType={onChangePresse}
+              name="username"
+              control={control}
+              placeholder=""
+              rules={{
+                required: 'No d\'utilisateur requis',
+                minLength: {
+                  value: 3,
+                  message: 'Le nom doit comporter au moins 3 caractères',
+                },
+                maxLength: {
+                  value: 24,
+                  message: 'Username should be max 24 characters long',
+                },
+              }}
+            />
+            <CustomInput
+              labelName="Nom & Prénom *"
+              label
+              editType={onChangePresse}
+              name="full_name"
+              control={control}
+              placeholder=""
+              rules={{
+                required: 'Nom et prénom requis',
+                minLength: {
+                  value: 3,
+                  message: 'Le nom doit comporter au moins 3 caractères',
+                },
+                maxLength: {
+                  value: 34,
+                  message: 'Le nom complet doit comporter au maximum 34 caractères',
+                },
+              }}
+            />
+            <CustomInput
+              name="email"
+              label
+              editType={onChangePresse}
+              labelName="Adresse email *"
+              control={control}
+              placeholder="E-mail"
+              textType="email-address"
+              rules={{
+                required: 'E-mail requis',
+                pattern: {value: EMAIL_REGEX, message: 'Email is invalid'},
+              }}
+            />
+            <CustomInput
+            labelName="Numéro de téléphone *"
+            label
+            editType={onChangePresse}
+                name="telefon"
+                control={control}
+                placeholder=""
+                rules={{
+                  required: 'Téléphone requis',
+                
+                }}
+              />
+              <CustomInput
+              labelName="Adresse de la livraison *"
+              label
+              editType={onChangePresse}
+                name="adresse"
+                control={control}
+                placeholder=""
+                rules={{
+                  required: 'Adresse requis',
+                  minLength: {
+                    value: 3,
+                    message: 'Votre Adresse doit comporter au moins 3 caractères',
+                  },
+                  maxLength: {
+                    value: 114,
+                    message: 'Adresse should be max 24 characters long',
+                  },
+                }}
+              /> 
+          {mytype=='edit'||type=='edit'? <CustomButton 
+              text="Enregistrer les modifications!"
+              onPress={handleSubmit(onEditPresse)}
+            />:<></>
+              }
+              { mytype=='cmd'&& type=='cmd'?
+            <CustomButton 
+            isLoading={cart.length==0}
+            type="TERTIARY"
+            text="Valider!"
+              onPress={handleSubmit(onSendPress)}
+            /> :<></>
+            }
+          </View>}
+        </ScrollView>)
+        :
+        <Connexion />
         }
-        { mytype=='cmd'&& type=='cmd'?
-      <CustomButton 
-      isLoading={cart.length==0}
-      type="TERTIARY"
-      text="Valider!"
-        onPress={handleSubmit(onSendPress)}
-      /> :<></>
-      }
-    </View>}
-  </ScrollView>
+    </SafeAreaView>
+    
   )
 }
 

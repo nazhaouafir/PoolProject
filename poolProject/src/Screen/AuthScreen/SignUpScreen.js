@@ -11,22 +11,33 @@ import * as SecureStore from 'expo-secure-store';
 import * as authActions from '../../redux/actions/auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Message from '../../Components/Message';
 
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/;
 const SignUpScreen = ({loading, actions}) => {
   const {height} = useWindowDimensions(); 
   const navigation = useNavigation();
   const {control, handleSubmit, watch, resetField, reset} = useForm();
   const pwd = watch('password');
-  
-  const onRegisterPressed = (data) => {
+  const [error, setError] = useState({
+    email:'',
+    password:'',
+    server:''
+  })
+    const onRegisterPressed = (data) => {
     actions.loading(true)
     instance.post('/api/register',{
       deviceName: Device.modelName,
       name : data.username,
-      email: data.email,
+      email: data.email.trim(),
       password: data.password
     }).then((res)=>{
+      if(res.data.message){
+        setError({
+          email:res.data.message['unique:users'],
+          password: res.data.message['password']
+        })
+      }
       SecureStore.setItemAsync('token', res.data.token);
       SecureStore.getItemAsync('token').then((token)=> {
         if(token){
@@ -44,7 +55,7 @@ const SignUpScreen = ({loading, actions}) => {
      
   }).catch((err)=>{
     actions.loading(false)
-    console.error(err)
+    setError({server:err.message})
   })
   };
 
@@ -74,7 +85,8 @@ const SignUpScreen = ({loading, actions}) => {
               resizeMode="contain"
             />
         <Text style={styles.title}>Créer un compte</Text>
-
+        {error.email || error.password?<Message errorText={error} type='WARNING' />:<></>}
+        {error.server?<Message errorText={error} type='DANGER' />:<></>}
         <CustomInput
           name="username"
           control={control}

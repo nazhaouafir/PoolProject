@@ -65,7 +65,7 @@ export async function getUser(token){
         const res = await  instance.get('/api/user');
             return res.data.user
     }catch(err){
-        return console.error(err)
+        return false
 
     }
 }
@@ -87,6 +87,7 @@ export async function editUser(token,info){
         const res = await instance.post('/api/edituser',{
             token:token,
             username: info.username,
+            full_name: info.full_name,
             email:info.email,
             adresse:info.adresse,
             telefon: info.telefon,
